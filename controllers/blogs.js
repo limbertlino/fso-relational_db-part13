@@ -48,4 +48,17 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", blogFinder, async (req, res) => {
+  try {
+    if (req.blog) {
+      req.blog.likes = req.body.likes;
+      await req.blog.save();
+      return res.status(204).send();
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error });
+  }
+});
+
 module.exports = router;
