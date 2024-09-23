@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { Sequelize } = require("sequelize");
+const { Sequelize, Model } = require("sequelize");
 
 const app = express();
 const sequelize = new Sequelize(process.env.DATABASE_URL);
@@ -16,8 +16,6 @@ const testing_connection = async () => {
     console.error("Unable to connect to the database:", error);
   }
 };
-
-testing_connection();
 
 // app.listen(process.env.PORT || 3002, () => {
 //   console.log("Started");
