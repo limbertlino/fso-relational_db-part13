@@ -7,11 +7,9 @@ const { SECRET } = require("../utils/config");
 const tokenExtractor = async (req, res, next) => {
   const authorization = req.get("authorization");
 
-  console.log(authorization);
   if (authorization?.toLowerCase().startsWith("bearer ")) {
     try {
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
-      console.log(req.decodedToken);
     } catch {
       return res.status(401).json({ error: "Token invalid" });
     }
@@ -43,19 +41,28 @@ router.post("/", tokenExtractor, async (req, res, next) => {
   res.json(blog);
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", tokenExtractor, async (req, res, next) => {
   const { id } = req.params;
+  const blogToDelete = await Blog.findByPk(id);
 
-  const deletedCount = await Blog.destroy({
-    where: {
-      id: id,
-    },
-  });
+  if (!blogToDelete) {
+    return res.status(404).json({ error: "Blog not found" });
+  }
 
-  if (deletedCount === 0)
-    return res.status(404).json({ message: "Blog not found" });
+  if (req.decodedToken.id === blogToDelete.userId) {
+    console.log("coincide");
+    await Blog.destroy({
+      where: {
+        id: id,
+      },
+    });
 
-  return res.status(204).send();
+    return res.status(204).send();
+  } else {
+    return res
+      .status(401)
+      .json({ error: "User is not authorized to delete this blog" });
+  }
 });
 
 router.put("/:id", async (req, res, next) => {
