@@ -5,6 +5,7 @@ const app = express();
 const { PORT } = require("./utils/config");
 const { connectToDatabase } = require("./utils/db");
 const blogsRouter = require("./controllers/blogs");
+const usersRouter = require("./controllers/users");
 
 const errorHandler = (error, req, res, next) => {
   if (error) {
@@ -18,6 +19,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(express.json());
 app.use("/api/blogs", blogsRouter);
+app.use("/api/users", usersRouter);
 app.use(errorHandler);
 
 const start = async () => {
