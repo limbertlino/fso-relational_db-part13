@@ -8,13 +8,16 @@ const blogsRouter = require("./controllers/blogs");
 const usersRouter = require("./controllers/users");
 
 const errorHandler = (error, req, res, next) => {
-  if (error) {
+  console.log(JSON.stringify(error.errors[0], null, 2));
+  if (error.errors[0].validatorKey === "isEmail") {
+    return res.status(400).json({ error: error.message });
+  } else if (error) {
     return res
       .status(400)
       .json({ error: error.name, errorMessage: error.message });
   }
 
-  next(error);
+  next();
 };
 
 app.use(express.json());
