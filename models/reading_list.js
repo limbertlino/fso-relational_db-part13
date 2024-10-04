@@ -32,6 +32,7 @@ ReadingList.init(
     underscored: true,
     timestamps: false,
     modelName: "reading_list",
+    freezeTableName: true,
   }
 );
 

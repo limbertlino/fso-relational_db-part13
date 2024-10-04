@@ -11,4 +11,4 @@ Blog.belongsToMany(User, { through: ReadingList, as: "reading_list_users" });
 // Blog.sync({ alter: true });
 // User.sync({ alter: true });
 
-module.exports = { Blog, User };
+module.exports = { Blog, User, ReadingList };

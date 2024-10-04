@@ -12,6 +12,23 @@ router.get("/", async (req, res) => {
   res.status(200).json(users);
 });
 
+router.get("/:id", async (req, res) => {
+  const user = await User.findByPk(req.params.id, {
+    attributes: { exclude: ["createdAt", "updatedAt", "id"] },
+    include: [
+      {
+        model: Blog,
+        as: "reading_list_blogs",
+        attributes: { exclude: ["userId"] },
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  });
+  res.json(user);
+});
+
 router.post("/", async (req, res) => {
   const user = await User.create(req.body);
   res.json(user);
